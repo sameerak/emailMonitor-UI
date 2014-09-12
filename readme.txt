@@ -1,11 +1,12 @@
 Read me file for email monitor system's jaggery application.
 
-requirements 
-in order to run and use the this app, user is required to add email-monitor-backend-1.0-SNAPSHOT.jar, email-monitor-admin-1.0-SNAPSHOT.jar and email-monitor-stub-1.0-SNAPSHOT.jar to CEP dropins folder,
-gmail-mediator-1.0-SNAPSHOT.jar to ESB dropins folder.
+This is the front end jaggery app for the email monitoring service project at [1].
 
-Then copy emailMonitor folder in to CEP's jaggery app folder and start both ESB and CEP with one server with a port off set.
+First clone this project and execute "mvn clean install" command in the terminal from "emailMonitor-UI".
+After setting up the email monitoring system at [1], copy emailMonitor-UI/target/emailMonitor-1.0.0.zip file in to CEP's jaggery app folder and start both ESB and CEP with ESB server with a port off set.
 
-Then use can access the jaggery at following URL.
+Then user can access the jaggery app at following URL.
 
 https://localhost:<CEP_server_port>/emailMonitor/
+
+[1] https://github.com/Wihidum/NewEmailMonitor
