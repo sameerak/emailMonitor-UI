@@ -22,19 +22,21 @@ if (!user) {
 }
 %>
 <%
+var log = new Log();
+var verb = request.getMethod();
+response.contentType = 'text/plain';
+
 if(verb == "POST") {
     var isConfigured = application.get("emailMon_isConfigured");
     var ui_isConfigured = request.getParameter("isConfigured");
-    var cepQuery = request.getParameter("cepQueries");
-    var verb = request.getMethod();
-    response.contentType = 'text/plain';
 
     var util = require("util/utility.js");
 
-    if((ui_isConfigured || isConfigured) && util.isNotNullOrEmpty(cepQuery)){
+    if((ui_isConfigured || isConfigured) &&
+            util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"), ["cepQueries"])){
+        var cepQuery = request.getParameter("cepQueries");
         try{
 
-            var log = new Log();
             var serverUrl = util.getServiceUrl();
             serverUrl = serverUrl + "EmailMonitorAdminService";
 

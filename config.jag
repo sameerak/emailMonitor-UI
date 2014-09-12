@@ -22,51 +22,55 @@ if (!user) {
 }
 %>
 <%
-if(verb == "POST") {
-    var emailAddress = request.getParameter("emailAddress");
-    var emailPassword = request.getParameter("emailPassword");
-    var esbUserName = request.getParameter("esbUserName");
-    var esbPassword = request.getParameter("esbPassword");
-    var verb = request.getMethod();
-    response.contentType = 'text/plain';
+var log = new Log();
+var verb = request.getMethod();
+response.contentType = 'text/plain';
 
+if(verb == "POST") {
     var util = require("util/utility.js");
 
-    var log = new Log();
-    var serverUrl = util.getServiceUrl();
-    serverUrl = serverUrl + "EmailMonitorAdminService";
+    if(util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"),
+            ["emailAddress", "emailPassword", "esbUserName", "esbPassword"])){
 
-    var emailMonitorAdminServiceStub = Packages.org.wso2.cep.email.monitor.stub.admin.EmailMonitorAdminServiceStub;
-    var myEmailMonitorAdminServiceStub = new emailMonitorAdminServiceStub(serverUrl);
+        var emailAddress = request.getParameter("emailAddress");
+        var emailPassword = request.getParameter("emailPassword");
+        var esbUserName = request.getParameter("esbUserName");
+        var esbPassword = request.getParameter("esbPassword");
 
-    var carbon = require('carbon');
+        var serverUrl = util.getServiceUrl();
+        serverUrl = serverUrl + "EmailMonitorAdminService";
 
-    var esbIP = carbon.server.ip;
-    var esbPort = carbon.server.httpsPort;
+        var emailMonitorAdminServiceStub = Packages.org.wso2.cep.email.monitor.stub.admin.EmailMonitorAdminServiceStub;
+        var myEmailMonitorAdminServiceStub = new emailMonitorAdminServiceStub(serverUrl);
 
-    if(util.isNotNullOrEmpty(emailAddress) && util.isNotNullOrEmpty(emailPassword) &&
-    util.isNotNullOrEmpty(esbUserName) && util.isNotNullOrEmpty(esbPassword)){
-    try{
+        var carbon = require('carbon');
 
-        var offset = carbon.server.httpsPort - 9443;
+        var esbIP = carbon.server.ip;
+        var esbPort = carbon.server.httpsPort;
 
-        var cepPort = 7711 + offset;
+        try{
 
-        myEmailMonitorAdminServiceStub.addCEPConfigurations(esbIP, esbPort, esbUserName, esbPassword, emailAddress);
-        myEmailMonitorAdminServiceStub.addESBConfigurations(esbIP, esbPort, esbUserName, esbPassword,
-        esbUserName, esbPassword, emailAddress, emailPassword, esbIP, cepPort);
+            var offset = carbon.server.httpsPort - 9443;
 
-        application.put('emailMon_isConfigured', true);
+            var cepPort = 7711 + offset;
 
-        response.status = 200;
-        print("CEP and ESB configured successfully.");
-    }
-    catch(error){
-        response.status = 500;
-        print("Something went wrong on the server side!");
-        log.debug(error);
-        print(error);
-    }
+            myEmailMonitorAdminServiceStub.addCEPConfigurations(esbIP, esbPort,
+                    esbUserName, esbPassword, emailAddress);
+            myEmailMonitorAdminServiceStub.addESBConfigurations(esbIP, esbPort,
+                    esbUserName, esbPassword, esbUserName, esbPassword, emailAddress,
+                    emailPassword, esbIP, cepPort);
+
+            application.put('emailMon_isConfigured', true);
+
+            response.status = 200;
+            print("CEP and ESB configured successfully.");
+        }
+        catch(error){
+            response.status = 500;
+            print("Something went wrong on the server side!");
+            log.debug(error);
+            print(error);
+        }
     }
     else {
         response.status = 400;

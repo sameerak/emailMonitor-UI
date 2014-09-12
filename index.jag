@@ -101,9 +101,7 @@ if (!user) {
                     <tbody>
                         <%
                         var indexLogic = require("index-logic.js");
-                        var storedQueries = indexLogic.getStoredQueries();X
-
-                        include("index-logic.js");
+                        var storedQueries = indexLogic.getStoredQueries();
 
                         if (storedQueries != null && storedQueries.length > 0){
                             for (var i = 0; i < storedQueries.length; i++) {

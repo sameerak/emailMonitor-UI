@@ -22,18 +22,21 @@ if (!user) {
 }
 %>
 <%
+var log = new Log();
+var verb = request.getMethod();
+response.contentType = 'text/plain';
+
 if(verb == "POST") {
     var isConfigured = application.get("emailMon_isConfigured");
-    var planNames = request.getParameter("planNames");
-    var verb = request.getMethod();
-    response.contentType = 'text/plain';
+    var ui_isConfigured = request.getParameter("isConfigured");
 
     var util = require("util/utility.js");
 
-    if(util.isNotNullOrEmpty(planNames)){
+    if((ui_isConfigured || isConfigured) &&
+            util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"), ["planNames"])){
         try{
+            var planNames = request.getParameter("planNames");
 
-            var log = new Log();
             var serverUrl = util.getServiceUrl();
             serverUrl = serverUrl + "EmailMonitorAdminService";
 

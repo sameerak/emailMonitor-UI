@@ -22,31 +22,33 @@ if (!user) {
 }
 %>
 <%
+var log = new Log();
+var verb = request.getMethod();
+response.contentType = 'text/plain';
+
 if(verb == "POST") {
 
-    var emailAddress = request.getParameter("emailAddress");
-    var emailPassword = request.getParameter("emailPassword");
-    var esbIP = request.getParameter("esbIP");
-    var esbPort = request.getParameter("esbPort");
-    var esbUserName = request.getParameter("esbUserName");
-    var esbPassword = request.getParameter("esbPassword");
-    var cepIP = request.getParameter("cepIP");
-    var cepPort = request.getParameter("cepPort");
-    var cepUserName = request.getParameter("cepUserName");
-    var cepPassword = request.getParameter("cepPassword");
-    var verb = request.getMethod();
-    response.contentType = 'text/plain';
 
     var util = require("util/utility.js");
 
-    if(util.isNotNullOrEmpty(emailAddress) && util.isNotNullOrEmpty(emailPassword) &&
-    util.isNotNullOrEmpty(esbIP) && util.isNotNullOrEmpty(esbPort) &&
-    util.isNotNullOrEmpty(esbUserName) && util.isNotNullOrEmpty(esbPassword) &&
-    util.isNotNullOrEmpty(cepIP) && util.isNotNullOrEmpty(cepPort) &&
-    util.isNotNullOrEmpty(cepUserName) && util.isNotNullOrEmpty(cepPassword)){
+    if(util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"),
+            ["emailAddress", "emailPassword", "esbIP", "esbPort",
+            "esbUserName", "esbPassword", "cepIP", "cepPort",
+            "cepUserName", "cepPassword"])){
+
+        var emailAddress = request.getParameter("emailAddress");
+        var emailPassword = request.getParameter("emailPassword");
+        var esbIP = request.getParameter("esbIP");
+        var esbPort = request.getParameter("esbPort");
+        var esbUserName = request.getParameter("esbUserName");
+        var esbPassword = request.getParameter("esbPassword");
+        var cepIP = request.getParameter("cepIP");
+        var cepPort = request.getParameter("cepPort");
+        var cepUserName = request.getParameter("cepUserName");
+        var cepPassword = request.getParameter("cepPassword");
+
         try{
 
-            var log = new Log();
             var serverUrl = util.getServiceUrl();
             serverUrl = serverUrl + "EmailMonitorAdminService";
 

@@ -16,7 +16,23 @@
  * under the License.
  */
 
-include("constants.js");
+var DEFAULT_CLAIM_URL = "http://wso2.org/claims";
+var OPENID_REG_CLAIM_URL = "http://schema.openid.net/2007/05/claims";
+var UI_USER_PERMISSIONS = "user-permissions";
+var UI_COMPONENTS = "ui-components";
+
+var LOGGED_IN_USER = "user";
+var USER_NAME = "user.name";
+var USER_HEADER = "user-header";
+
+var I18N = "i18n";
+var SERVER_URL = "https://localhost:9443/services";
+
+var AUTH_CONFIG_PARSED = "auth.config.parsed";
+var SAML_ENABLED = "saml.enabled";
+
+var SAML_RESPONSE = "saml.response";
+var SAML_PROPERTIES = "saml.config";
 
 var log = new Log();
 
@@ -51,7 +67,16 @@ function sortNumber(jsonArray, property, ascending, zeroLast) {
     return jsonArray;
 }
 
-
+function inputNotNullOrEmpty(jsonObj, paramNameArray){
+    var input;
+    for (var i = 0; i < paramNameArray.length; i++) {
+        input = jsonObj[paramNameArray[i]];
+        if(input == "" || input === 'null' || input == null || input.length <= 0){
+            return false;
+        }
+    }
+    return true;
+}
 
 
 function getServerUrl(){
