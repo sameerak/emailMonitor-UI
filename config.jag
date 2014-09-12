@@ -28,14 +28,10 @@ response.contentType = 'text/plain';
 
 if(verb == "POST") {
     var util = require("util/utility.js");
+    var inputParameters = request.getAllParameters("UTF-8");
 
-    if(util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"),
+    if(util.inputNotNullOrEmpty(inputParameters,
             ["emailAddress", "emailPassword", "esbUserName", "esbPassword"])){
-
-        var emailAddress = request.getParameter("emailAddress");
-        var emailPassword = request.getParameter("emailPassword");
-        var esbUserName = request.getParameter("esbUserName");
-        var esbPassword = request.getParameter("esbPassword");
 
         var serverUrl = util.getServiceUrl();
         serverUrl = serverUrl + "EmailMonitorAdminService";
@@ -55,10 +51,13 @@ if(verb == "POST") {
             var cepPort = 7711 + offset;
 
             myEmailMonitorAdminServiceStub.addCEPConfigurations(esbIP, esbPort,
-                    esbUserName, esbPassword, emailAddress);
+                    inputParameters.esbUserName, inputParameters.esbPassword,
+                    inputParameters.emailAddress);
             myEmailMonitorAdminServiceStub.addESBConfigurations(esbIP, esbPort,
-                    esbUserName, esbPassword, esbUserName, esbPassword, emailAddress,
-                    emailPassword, esbIP, cepPort);
+                    inputParameters.esbUserName, inputParameters.esbPassword,
+                    inputParameters.esbUserName, inputParameters.esbPassword,
+                    inputParameters.emailAddress, inputParameters.emailPassword,
+                    esbIP, cepPort);
 
             application.put('emailMon_isConfigured', true);
 

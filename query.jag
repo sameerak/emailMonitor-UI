@@ -28,13 +28,13 @@ response.contentType = 'text/plain';
 
 if(verb == "POST") {
     var isConfigured = application.get("emailMon_isConfigured");
-    var ui_isConfigured = request.getParameter("isConfigured");
 
     var util = require("util/utility.js");
+    var inputParameters = request.getAllParameters("UTF-8")
+    var ui_isConfigured = inputParameters.isConfigured;
 
     if((ui_isConfigured || isConfigured) &&
-            util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"), ["cepQueries"])){
-        var cepQuery = request.getParameter("cepQueries");
+            util.inputNotNullOrEmpty(inputParameters, ["cepQueries"])){
         try{
 
             var serverUrl = util.getServiceUrl();
@@ -44,20 +44,20 @@ if(verb == "POST") {
                     Packages.org.wso2.cep.email.monitor.stub.admin.EmailMonitorAdminServiceStub;
             var myEmailMonitorAdminServiceStub = new emailMonitorAdminServiceStub(serverUrl);
 
-            var siddhiQueries = myEmailMonitorAdminServiceStub.getSiddhiQuery(cepQuery);
+            var siddhiQueries = myEmailMonitorAdminServiceStub.getSiddhiQuery(inputParameters.cepQueries);
             var planName = myEmailMonitorAdminServiceStub.createExecutionPlan(siddhiQueries);
 
             var path = "emailMonitorCollection/queryCollection/" + planName;
 
             var replyjson = {};
-            replyjson.query = cepQuery;
+            replyjson.query = inputParameters.cepQueries;
             replyjson.planName = planName;
 
             myEmailMonitorAdminServiceStub.saveResourceString(stringify(replyjson), path);
 
             replyjson.message = "CEP query added successfully.";
             response.status = 200;
-            print(stringify(replyjson));
+            print(replyjson);
         }
         catch(error){
             response.status = 500;

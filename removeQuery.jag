@@ -28,9 +28,10 @@ response.contentType = 'text/plain';
 
 if(verb == "POST") {
     var isConfigured = application.get("emailMon_isConfigured");
-    var ui_isConfigured = request.getParameter("isConfigured");
 
     var util = require("util/utility.js");
+    var inputParameters = request.getAllParameters("UTF-8")
+    var ui_isConfigured = inputParameters.isConfigured;
 
     if((ui_isConfigured || isConfigured) &&
             util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"), ["planNames"])){
@@ -57,7 +58,7 @@ if(verb == "POST") {
                     "queryCollection/" + plans[0]);
 
             response.status = 200;
-            print(stringify("Email query removed successfully."));
+            print("Email query removed successfully.");
         }
         catch(error){
             response.status = 500;

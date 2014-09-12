@@ -30,22 +30,23 @@ if(verb == "POST") {
 
 
     var util = require("util/utility.js");
+    var inputParameters = request.getAllParameters("UTF-8")
 
-    if(util.inputNotNullOrEmpty(request.getAllParameters("UTF-8"),
+    if(util.inputNotNullOrEmpty(inputParameters,
             ["emailAddress", "emailPassword", "esbIP", "esbPort",
             "esbUserName", "esbPassword", "cepIP", "cepPort",
             "cepUserName", "cepPassword"])){
 
-        var emailAddress = request.getParameter("emailAddress");
-        var emailPassword = request.getParameter("emailPassword");
-        var esbIP = request.getParameter("esbIP");
-        var esbPort = request.getParameter("esbPort");
-        var esbUserName = request.getParameter("esbUserName");
-        var esbPassword = request.getParameter("esbPassword");
-        var cepIP = request.getParameter("cepIP");
-        var cepPort = request.getParameter("cepPort");
-        var cepUserName = request.getParameter("cepUserName");
-        var cepPassword = request.getParameter("cepPassword");
+        var emailAddress = inputParameters.emailAddress;
+        var emailPassword = inputParameters.emailPassword;
+        var esbIP = inputParameters.esbIP;
+        var esbPort = inputParameters.esbPort;
+        var esbUserName = inputParameters.esbUserName;
+        var esbPassword = inputParameters.esbPassword;
+        var cepIP = inputParameters.cepIP;
+        var cepPort = inputParameters.cepPort;
+        var cepUserName = inputParameters.cepUserName;
+        var cepPassword = inputParameters.cepPassword;
 
         try{
 
@@ -57,9 +58,11 @@ if(verb == "POST") {
             var myEmailMonitorAdminServiceStub = new emailMonitorAdminServiceStub(serverUrl);
             myEmailMonitorAdminServiceStub.createMailInputStream();
             myEmailMonitorAdminServiceStub.createMailOutputStream();
-            myEmailMonitorAdminServiceStub.addESBConfigurations(esbIP, esbPort, esbUserName,
-                    esbPassword, cepUserName, cepPassword, emailAddress, emailPassword,
-                    cepIP, cepPort);
+            myEmailMonitorAdminServiceStub.addESBConfigurations(inputParameters.esbIP,
+                    inputParameters.esbPort, inputParameters.esbUserName,
+                    inputParameters.esbPassword, inputParameters.cepUserName,
+                    inputParameters.cepPassword, inputParameters.emailAddress,
+                    inputParameters.emailPassword, inputParameters.cepIP, inputParameters.cepPort);
             response.status = 200;
                 print("CEP and ESB configured successfully.");
             }
