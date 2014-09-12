@@ -1,0 +1,75 @@
+<%/*
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */%>
+<%
+var user = require('store').server.current(session);
+if (!user) {
+	response.sendRedirect('./login');
+}
+%>
+<%
+if(verb == "POST") {
+    var isConfigured = application.get("emailMon_isConfigured");
+    var planNames = request.getParameter("planNames");
+    var verb = request.getMethod();
+    response.contentType = 'text/plain';
+
+    var util = require("util/utility.js");
+
+    if(util.isNotNullOrEmpty(planNames)){
+        try{
+
+            var log = new Log();
+            var serverUrl = util.getServiceUrl();
+            serverUrl = serverUrl + "EmailMonitorAdminService";
+
+            var eventProcessorAdminService =
+                    Packages.org.wso2.carbon.event.processor.admin.EventProcessorAdminService;
+            var myEventProcessorAdminService = new eventProcessorAdminService();
+
+            var emailMonitorAdminServiceStub =
+                    Packages.org.wso2.cep.email.monitor.stub.admin.EmailMonitorAdminServiceStub;
+            var myEmailMonitorAdminServiceStub = new emailMonitorAdminServiceStub(serverUrl);
+
+            var plans = planNames.split(",");
+
+            for (var i = 0; i < plans.length; i++) {
+                myEventProcessorAdminService.undeployActiveExecutionPlanConfiguration(plans[i]);
+            }
+            myEmailMonitorAdminServiceStub.removeResource("emailMonitorCollection/" +
+                    "queryCollection/" + plans[0]);
+
+            response.status = 200;
+            print(stringify("Email query removed successfully."));
+        }
+        catch(error){
+            response.status = 500;
+            print("Something went wrong on the server side!");
+            log.debug(error);
+            //print(error);
+        }
+    }
+    else {
+        response.status = 400;
+        print("Please configure the email monitor system correctly!");
+    }
+}
+else {
+    response.status = 400;
+    print("Only method allowed on this resource is HTTP POST");
+}
+%>
