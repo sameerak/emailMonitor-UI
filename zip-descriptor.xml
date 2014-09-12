@@ -16,14 +16,13 @@
 		<fileSet>
 			<directory>${project.basedir}</directory>
 			<includes>
-				<include>**/*</include>
+				<include>**</include>
 			</includes>
 			
 			<excludes>
 				<exclude>target/</exclude>
-				<exclude>.project</exclude>
-				<exclude>.buildpath</exclude>
-				<exclude>.settings/</exclude>
+				<exclude>.*</exclude>
+				<exclude>.*/</exclude>
 				<exclude>zip-descriptor.xml</exclude>
 			</excludes>
 		</fileSet>
