@@ -100,38 +100,7 @@ if (!user) {
                 <table class="table table-no-border text-center queryPlans" id="storedQueries">
                     <tbody>
                         <%
-                        var indexLogic = require("index-logic.js");
-                        var storedQueries = indexLogic.getStoredQueries();
-
-                        if (storedQueries != null && storedQueries.length > 0){
-                            for (var i = 0; i < storedQueries.length; i++) {
-                                var storedString = myEmailMonitorAdminServiceStub.getResourceString(storedQueries[i]);
-                                var content = parse(String(storedString));
-
-                                var linkString = '<a href = "..//carbon/eventprocessor/execution_plan_details.jsp?ordinal=1&execPlan=' + content.planName + '"><span>' + content.planName + '</span></a>';
-
-                        %>
-                                <tr>
-                                    <td class="text-left row">
-                                        <div class="queryPlans col-md-offset-1 col-md-10 row">
-                                            <p class="text-left" id="queryName">Query : <%print(content.query);%></p>
-                                            <p class="text-left">Execution Plans : <span id="executionPlans"><%print(linkString);%></span></p>
-                                            <p class="text-right col-md-11"><button type="button" class="btn btn-danger">Delete Query</button></p>
-                                        </div>
-                                    </td>
-                                </tr>
-                        <%
-                            }
-                        }
-                        else {
-                        %>
-                            <tr>
-                                <td class="text-left">
-                                    <p class="text-center">There are no queries deployed to query the email account</p>
-                                </td>
-                            </tr>
-                        <%
-                        }
+                            include_once("util/queryRetriever.jag")
                         %>
                     </tbody>
                 </table>
